@@ -293,6 +293,22 @@ $testes = [
         }
     },
 
+    'IP do cliente atrás de proxy só com TRUST_PROXY' => function () {
+        $antes = [$_SERVER, $_ENV['TRUST_PROXY'] ?? null];
+        $_SERVER = ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/', 'REMOTE_ADDR' => '10.1.1.1', 'HTTP_X_FORWARDED_FOR' => '6.6.6.6, 200.10.20.30'];
+        try {
+            unset($_ENV['TRUST_PROXY']);
+            igual('10.1.1.1', Request::doServidor()->ip, 'sem proxy confiável, ignora o header');
+            $_ENV['TRUST_PROXY'] = '1';
+            igual('200.10.20.30', Request::doServidor()->ip, 'usa o último IP (o que o proxy viu), não o que o cliente mandou');
+            $_SERVER['HTTP_X_FORWARDED_FOR'] = 'lixo';
+            igual('10.1.1.1', Request::doServidor()->ip, 'header inválido');
+        } finally {
+            [$_SERVER, $trust] = $antes;
+            if ($trust === null) unset($_ENV['TRUST_PROXY']); else $_ENV['TRUST_PROXY'] = $trust;
+        }
+    },
+
     'esqueci a senha: e-mail, troca de senha e sessões derrubadas' => function () {
         $correio = new CorreioFalso();
         $c = novoCliente(correio: $correio);

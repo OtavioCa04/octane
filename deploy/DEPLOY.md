@@ -1,5 +1,7 @@
 # Publicar a Octane (beta fechado)
 
+> Vai usar o **Railway**? Siga o `RAILWAY.md`, que é mais simples. Este guia é para hospedagem PHP comum.
+
 Feito para hospedagem PHP comum com Apache e MySQL (Hostinger, Locaweb, KingHost, HostGator…).
 Tudo fica num domínio só: o site em `https://seu-dominio` e a API em `https://seu-dominio/api`.
 

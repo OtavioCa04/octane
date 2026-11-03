@@ -56,7 +56,13 @@ final class RedefinicaoDeSenha
         ]);
 
         $link = rtrim((string) Env::get('APP_URL', 'http://localhost:4200'), '/') . '/redefinir-senha?token=' . $token;
-        $this->correio->enviar($this->mensagem($usuario, $link));
+        try {
+            $this->correio->enviar($this->mensagem($usuario, $link));
+        } catch (\Throwable $e) {
+            // O motivo real (chave errada, serviço fora do ar) fica só no log
+            error_log("[GarageHub] Falha ao enviar e-mail de redefinição: {$e->getMessage()}");
+            throw new HttpException(503, 'Não conseguimos enviar o e-mail agora. Tente de novo em alguns minutos.');
+        }
     }
 
     /** Troca a senha e derruba todas as sessões abertas da conta. */

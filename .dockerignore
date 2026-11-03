@@ -1,0 +1,16 @@
+# Fora da imagem: dependências e builds locais, segredos, bancos de teste e sobras
+**/node_modules
+garagehub-web/dist
+garagehub-web/.angular
+garagehub-api/.env
+garagehub-api/*.sqlite
+garagehub-api/storage
+garagehub-api/public/uploads
+garagehub-api/tests
+garagehub-api/dev-sqlite.cmd
+garagehub-api-novo
+php-dev
+deploy/saida
+deploy/*.zip
+.git
+.claude

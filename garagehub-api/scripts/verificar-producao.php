@@ -58,9 +58,13 @@ $item((is_dir($storage) || @mkdir($storage, 0750, true)) && is_writable($storage
 
 echo "\nE-mail\n";
 $driver = Env::get('MAIL_DRIVER');
-$item($driver === 'smtp', 'MAIL_DRIVER=smtp', 'Sem isso, os e-mails de senha só são gravados em storage/mail.');
+$item(in_array($driver, ['smtp', 'resend'], true), "MAIL_DRIVER=smtp ou resend ({$driver})", 'Sem isso, os e-mails de senha só são gravados em storage/mail.');
 if ($driver === 'smtp') {
     $item((string) Env::get('MAIL_HOST') !== '' && (string) Env::get('MAIL_FROM_ADDRESS') !== '', 'MAIL_HOST e MAIL_FROM_ADDRESS preenchidos');
+}
+if ($driver === 'resend') {
+    $item(str_starts_with((string) Env::get('RESEND_API_KEY'), 're_'), 'RESEND_API_KEY preenchida', 'A chave do Resend começa com re_.');
+    $item((string) Env::get('MAIL_FROM_ADDRESS') !== '', 'MAIL_FROM_ADDRESS preenchido', 'Use um endereço do domínio confirmado no Resend.');
 }
 $para = $argv[1] ?? null;
 if ($para) {

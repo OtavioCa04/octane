@@ -27,6 +27,22 @@ final class Request
     ) {
     }
 
+    /**
+     * IP de quem fez o pedido. Atrás de um proxy (Railway, Cloudflare), REMOTE_ADDR é o do proxy para todo mundo,
+     * e os limites por IP (login, esqueci a senha) virariam um limite do site inteiro. Com TRUST_PROXY=1, usa o
+     * último endereço do X-Forwarded-For, que é o que o proxy viu (os anteriores o próprio cliente pode inventar).
+     */
+    private static function ipDoCliente(array $headers): string
+    {
+        $remoto = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        if (!Env::bool('TRUST_PROXY') || empty($headers['x-forwarded-for'])) {
+            return $remoto;
+        }
+        $ips = array_map('trim', explode(',', $headers['x-forwarded-for']));
+        $ultimo = end($ips);
+        return filter_var($ultimo, FILTER_VALIDATE_IP) ? $ultimo : $remoto;
+    }
+
     public static function doServidor(): self
     {
         $headers = [];
@@ -76,7 +92,7 @@ final class Request
             $body,
             $headers,
             $_GET,
-            $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+            self::ipDoCliente($headers),
             $arquivos,
         );
     }
