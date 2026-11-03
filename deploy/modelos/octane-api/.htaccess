@@ -1,0 +1,3 @@
+# Esta pasta não deveria estar acessível pela web. Se a hospedagem a colocar dentro da pasta
+# pública por engano, nada aqui é servido (o .env tem senhas).
+Require all denied

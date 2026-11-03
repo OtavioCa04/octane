@@ -1,0 +1,44 @@
+@use '../../shared/styles/formulario';
+
+form {
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gh-field input[type='date'] {
+  height: 50px;
+  color-scheme: dark;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--gh-border-strong);
+  background: none;
+  color: var(--gh-text-2);
+  font: 500 13px var(--gh-font-body);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--gh-text-faint);
+  }
+
+  &.ativo {
+    border-color: var(--gh-accent);
+    background: var(--gh-accent-soft);
+    color: var(--gh-accent-text);
+  }
+}
+
+.valor {
+  max-width: 320px;
+}

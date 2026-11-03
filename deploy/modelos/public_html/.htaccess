@@ -1,0 +1,51 @@
+# Octane em hospedagem Apache: o site (Angular) nesta pasta e a API em api/index.php,
+# que carrega o código guardado fora da pasta pública (../octane-api).
+
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# Sempre HTTPS (o X-Forwarded-Proto cobre hospedagens atrás de proxy/CDN)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Repassa o header Authorization (o token de login) para o PHP. Em CGI/FastCGI o Apache o remove;
+# a API também lê a cópia feita pela regra abaixo (REDIRECT_HTTP_AUTHORIZATION).
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Tudo em /api vai para a API
+RewriteCond %{REQUEST_URI} !^/api/index\.php$
+RewriteRule ^api(/.*)?$ api/index.php [QSA,L]
+
+# Arquivos que existem (JS, CSS, fotos) são servidos direto
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# O resto é rota do Angular (/lari_jdm, /feed...)
+RewriteRule ^ index.html [L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=15552000" env=HTTPS
+
+  # Os arquivos do build têm hash no nome: podem ficar em cache por um ano
+  <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # O index.html nunca fica em cache, para todo mundo pegar a versão nova depois de um deploy
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# Nunca servir arquivos de configuração que caiam aqui por engano
+<FilesMatch "^(\.env.*|.*\.(sql|sqlite|log|md|json\.bak))$">
+  Require all denied
+</FilesMatch>

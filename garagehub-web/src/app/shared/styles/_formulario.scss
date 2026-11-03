@@ -1,0 +1,157 @@
+// Estrutura comum das telas de formulário da garagem (carro, modificação):
+// página, blocos, grades de campos, mensagens e ações.
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+main {
+  max-width: var(--gh-max-width);
+  margin: 0 auto;
+  padding: 24px 24px 64px;
+}
+
+h1 {
+  font-size: 44px;
+  margin: 16px 0 24px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+.voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--gh-text-muted);
+}
+
+.estado {
+  padding: 48px 0;
+  color: var(--gh-text-muted);
+}
+
+.bloco {
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grade {
+  display: grid;
+  gap: 14px;
+
+  &--2 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  &--3 {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+// Campos que o .gh-field global não cobre
+select,
+textarea,
+.gh-field input[type='search'],
+.gh-field input[type='date'] {
+  background: var(--gh-input);
+  border: 1px solid var(--gh-border);
+  border-radius: var(--gh-radius);
+  color: var(--gh-text);
+  font: 400 15px var(--gh-font-body);
+  padding: 0 14px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--gh-accent);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+  }
+}
+
+select,
+.gh-field input[type='search'] {
+  height: 50px;
+}
+
+// Fundo sólido: a lista de opções do select herda esta cor (ver styles.scss)
+select {
+  background-color: var(--gh-surface);
+  color-scheme: dark;
+}
+
+textarea {
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.dica {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gh-text-faint);
+}
+
+.aviso {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gh-danger-text);
+}
+
+.erro-geral {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--gh-radius);
+  border: 1px solid rgba(255, 138, 128, 0.4);
+  background: rgba(255, 138, 128, 0.08);
+  color: var(--gh-danger-text);
+  font-size: 14px;
+}
+
+.link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: 500 14px var(--gh-font-body);
+  color: var(--gh-accent-text);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.excluir {
+  margin-left: auto;
+  border-color: rgba(255, 138, 128, 0.5);
+  color: var(--gh-danger-text);
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 16px 16px 48px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  .bloco {
+    padding: 18px;
+  }
+}

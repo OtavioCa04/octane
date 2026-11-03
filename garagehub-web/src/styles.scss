@@ -1,0 +1,226 @@
+// Tokens da identidade visual da Octane (Dark Luxury / Performance Tech)
+:root {
+  --gh-bg: #0b0d11;
+  --gh-surface: #14171f;
+  --gh-surface-2: #1a1e27;
+  --gh-input: rgba(255, 255, 255, 0.04);
+  --gh-border: rgba(255, 255, 255, 0.08);
+  --gh-border-strong: rgba(255, 255, 255, 0.16);
+
+  --gh-text: #f2f3f5;
+  --gh-text-2: #c9ced6;
+  --gh-text-muted: #9aa1ac;
+  --gh-text-faint: #7c8491;
+
+  // Cobre Octane: ação e o que está ativo; a versão clara vai em links e valores
+  --gh-accent: #c9773f;
+  --gh-accent-hover: #d68a55;
+  --gh-accent-text: #da9f78;
+  --gh-accent-soft: rgba(201, 119, 63, 0.14);
+  --gh-accent-line: rgba(201, 119, 63, 0.45);
+  --gh-on-accent: #0b0d11;
+  --gh-titanium: #a7adb7;
+
+  --gh-success-soft: rgba(123, 201, 160, 0.12);
+  --gh-success-text: #8fd6b0;
+  --gh-danger-text: #ff8a80;
+
+  --gh-font-brand: 'Michroma', 'Plus Jakarta Sans', sans-serif;
+  --gh-font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --gh-font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --gh-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --gh-radius: 10px;
+  --gh-radius-lg: 16px;
+  --gh-max-width: 1280px;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--gh-bg);
+  color: var(--gh-text);
+  font-family: var(--gh-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--gh-font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gh-accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Botões
+.gh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: var(--gh-radius);
+  font: 600 14px var(--gh-font-body);
+  cursor: pointer;
+  border: 1px solid var(--gh-border-strong);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--gh-text);
+  transition: background-color 0.15s, border-color 0.15s;
+
+  &:hover {
+    border-color: var(--gh-text-faint);
+  }
+
+  &--primary {
+    background: var(--gh-accent);
+    border-color: var(--gh-accent);
+    color: var(--gh-on-accent);
+    font-weight: 600;
+
+    &:hover {
+      background: var(--gh-accent-hover);
+      border-color: var(--gh-accent-hover);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: progress;
+    }
+  }
+
+  &--block {
+    width: 100%;
+    height: 52px;
+    font-size: 16px;
+  }
+}
+
+// Campos de formulário
+.gh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--gh-text-2);
+
+  input {
+    height: 50px;
+    background: var(--gh-input);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius);
+    padding: 0 14px;
+    color: var(--gh-text);
+    font: 400 15px var(--gh-font-body);
+
+    &::placeholder {
+      color: var(--gh-text-faint);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--gh-accent);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--gh-danger-text);
+    }
+  }
+
+  &__error {
+    font-size: 12px;
+    color: var(--gh-danger-text);
+  }
+}
+
+// Superfícies da Octane
+.gh-vidro {
+  background: rgba(20, 23, 31, 0.62);
+  border: 1px solid var(--gh-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.gh-carbono {
+  background-color: #111318;
+  background-image:
+    linear-gradient(27deg, #161920 5px, transparent 5px),
+    linear-gradient(207deg, #161920 5px, transparent 5px),
+    linear-gradient(27deg, #0c0e12 5px, transparent 5px),
+    linear-gradient(207deg, #0c0e12 5px, transparent 5px),
+    linear-gradient(90deg, #101217 10px, transparent 10px),
+    linear-gradient(#15171d 25%, #121419 25%, #121419 50%, transparent 50%, transparent 75%, #181b22 75%, #181b22);
+  background-size: 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+// Dado técnico (specs, km, FIPE, contadores)
+.gh-mono {
+  font-family: var(--gh-font-mono);
+}
+
+.gh-rotulo {
+  font: 500 10px var(--gh-font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gh-text-muted);
+}
+
+// Selects: a lista que abre é desenhada pelo sistema e não herda o fundo translúcido do campo,
+// então as opções ficavam com letra clara sobre fundo branco. Fundo e cor fixos resolvem.
+select {
+  background-color: var(--gh-surface);
+  color: var(--gh-text);
+  color-scheme: dark;
+}
+
+select option,
+select optgroup {
+  background-color: var(--gh-surface);
+  color: var(--gh-text);
+}
+
+select option:disabled {
+  color: var(--gh-text-faint);
+}
+
+// Foto de perfil dentro dos círculos que mostram as iniciais
+.gh-avatar-foto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}

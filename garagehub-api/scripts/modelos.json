@@ -1,0 +1,11 @@
+[
+  { "marca": "Volkswagen", "modelo": "Golf GTI", "busca": "Volkswagen Golf Mk7" },
+  { "marca": "Honda", "modelo": "Civic Si", "busca": "Honda Civic Si coupe 2014", "commons": true },
+  { "marca": "Volkswagen", "modelo": "Fusca", "busca": "Volkswagen Fusca" },
+  { "marca": "Fiat", "modelo": "Uno Mille", "busca": "Fiat Uno" },
+  { "marca": "Toyota", "modelo": "Supra MK4", "busca": "Toyota Supra A80", "commons": true },
+  { "marca": "Nissan", "modelo": "Skyline R34", "busca": "Nissan Skyline GT-R R34", "commons": true },
+  { "marca": "Dodge", "modelo": "Charger 1970", "busca": "1970 Dodge Charger", "commons": true },
+  { "marca": "Mazda", "modelo": "RX-7", "busca": "Mazda RX-7" },
+  { "marca": "Chevrolet", "modelo": "Opala", "busca": "Chevrolet Opala" }
+]

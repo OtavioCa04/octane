@@ -1,0 +1,94 @@
+<gh-site-header />
+
+<main>
+  <a [routerLink]="voltar()" class="voltar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    @if (veiculo(); as v) {
+      {{ v.marca }} {{ v.modelo }}
+    } @else {
+      Voltar
+    }
+  </a>
+
+  <h1>Fotos do carro</h1>
+
+  @if (carro.isLoading() && !veiculo()) {
+    <p class="estado">Carregando…</p>
+  } @else if (!veiculo()) {
+    <p class="estado">Esse carro não existe ou não é seu.</p>
+  } @else {
+    <label
+      class="envio"
+      [class.envio--ativo]="arrastando()"
+      [class.envio--cheio]="vagas() <= 0"
+      (dragover)="arrastar($event, true)"
+      (dragleave)="arrastar($event, false)"
+      (drop)="soltar($event)"
+    >
+      <input type="file" accept="image/*" multiple (change)="escolher($event)" [disabled]="vagas() <= 0" class="sr-only" />
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M12 16V4M7 9l5-5 5 5" /><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" />
+      </svg>
+      @if (vagas() > 0) {
+        <strong>Escolha fotos ou arraste para cá</strong>
+        <span>Pode mandar várias de uma vez. Ainda cabem {{ vagas() }} de {{ max }}.</span>
+      } @else {
+        <strong>Limite de {{ max }} fotos atingido</strong>
+        <span>Exclua alguma para enviar outras.</span>
+      }
+    </label>
+    <p class="dica">Antes do envio, as fotos são reduzidas e perdem a localização GPS e os outros dados da câmera.</p>
+
+    @if (erro(); as mensagem) {
+      <p class="erro-geral" role="alert">{{ mensagem }}</p>
+    }
+
+    @if (envios().length) {
+      <ul class="fila" aria-live="polite">
+        @for (e of envios(); track e.id) {
+          <li [class.fila--erro]="e.status === 'erro'">
+            <span class="fila__nome">{{ e.nome }}</span>
+            @switch (e.status) {
+              @case ('esperando') { <span class="fila__status">Na fila</span> }
+              @case ('enviando') { <span class="fila__status">Enviando…</span> }
+              @case ('erro') {
+                <span class="fila__status">{{ e.erro }}</span>
+                <button type="button" class="link" (click)="tentarDeNovo(e.id)">Tentar de novo</button>
+                <button type="button" class="link" (click)="descartarErro(e.id)">Descartar</button>
+              }
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (fotos().length) {
+      <ul class="grade-fotos">
+        @for (f of fotos(); track f.id) {
+          <li [class.ocupada]="ocupada() === f.id">
+            <img [src]="f.url" [alt]="'Foto ' + ($index + 1)" loading="lazy" />
+            @if (f.capa) {
+              <span class="selo-capa">Capa</span>
+            }
+            <div class="acoes-foto">
+              @if (!f.capa) {
+                <button type="button" class="gh-btn" (click)="usarComoCapa(f)" [disabled]="ocupada() !== null">Usar como capa</button>
+              }
+              <button type="button" class="gh-btn excluir-foto" (click)="excluir(f)" [disabled]="ocupada() !== null" [attr.aria-label]="'Excluir foto ' + ($index + 1)">
+                Excluir
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else if (!envios().length) {
+      <p class="estado">Nenhuma foto ainda. A primeira que você enviar vira a capa do carro.</p>
+    }
+
+    <div class="acoes">
+      <a [routerLink]="voltar()" class="gh-btn gh-btn--primary">Ver a página do carro</a>
+    </div>
+  }
+</main>

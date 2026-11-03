@@ -1,0 +1,81 @@
+@use '../../shared/styles/formulario';
+
+form {
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gh-text-muted);
+  cursor: pointer;
+
+  input {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--gh-accent);
+  }
+
+  strong {
+    display: block;
+    color: var(--gh-text);
+  }
+}
+
+.foto-perfil {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  // Mesmo anel em degradê do perfil
+  &__anel {
+    width: 96px;
+    height: 96px;
+    flex: none;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(var(--gh-accent), var(--gh-accent-text), var(--gh-titanium), var(--gh-accent));
+
+    span {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--gh-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 800 32px var(--gh-font-display);
+    }
+  }
+
+  &__acoes {
+    flex: 1 1 260px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    .dica,
+    .aviso {
+      flex-basis: 100%;
+    }
+  }
+
+  label.gh-btn {
+    cursor: pointer;
+  }
+
+  .desativado {
+    opacity: 0.6;
+    cursor: progress;
+  }
+}

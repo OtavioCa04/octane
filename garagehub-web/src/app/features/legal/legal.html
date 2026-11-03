@@ -1,0 +1,120 @@
+<header>
+  <a routerLink="/"><gh-logo /></a>
+  <nav>
+    <a routerLink="/termos" [class.ativo]="documento() === 'termos'">Termos de uso</a>
+    <a routerLink="/privacidade" [class.ativo]="documento() === 'privacidade'">Privacidade</a>
+  </nav>
+</header>
+
+<main>
+  @if (documento() === 'termos') {
+    <p class="gh-rotulo">Versão beta · atualizado em {{ data }}</p>
+    <h1>Termos de uso</h1>
+
+    <p>
+      A Octane é uma rede social para mostrar a sua garagem, registrar o que você muda nos seus carros e acompanhar os
+      projetos de outras pessoas. Ao criar uma conta, você concorda com estes termos.
+    </p>
+
+    <h2>Versão de testes</h2>
+    <p>
+      O app está em fase de testes com um grupo fechado. Podem acontecer erros, mudanças nas telas e, em último caso, perda
+      de dados. Avisaremos antes de qualquer mudança grande. Use o botão “Reportar problema” para nos contar o que encontrar.
+    </p>
+
+    <h2>Sua conta</h2>
+    <ul>
+      <li>Você precisa ter pelo menos 18 anos, ou 16 com autorização dos responsáveis.</li>
+      <li>Use dados verdadeiros e guarde sua senha. Você responde pelo que é feito na sua conta.</li>
+      <li>Um nome de usuário que imite outra pessoa ou marca pode ser alterado ou removido.</li>
+    </ul>
+
+    <h2>O que você publica</h2>
+    <p>
+      Fotos, textos e comentários continuam sendo seus. Ao publicar, você nos autoriza a exibi-los no app para as pessoas
+      que podem ver o seu perfil, de acordo com as suas configurações de privacidade. Publique só fotos que são suas ou que
+      você tem permissão para usar.
+    </p>
+
+    <h2>Não é permitido</h2>
+    <ul>
+      <li>Ofender, ameaçar ou expor outras pessoas, incluindo placas e endereços de terceiros.</li>
+      <li>Publicar conteúdo ilegal, sexual ou que incentive racha e direção perigosa em via pública.</li>
+      <li>Vender carros ou peças, fazer propaganda não autorizada ou enviar spam.</li>
+      <li>Tentar acessar contas de outras pessoas ou atrapalhar o funcionamento do app.</li>
+    </ul>
+    <p>Podemos remover conteúdo ou suspender contas que descumpram estas regras.</p>
+
+    <h2>Valores da Tabela FIPE</h2>
+    <p>
+      Os valores exibidos são apenas referência da Tabela FIPE e podem estar desatualizados. A Octane não compra, vende nem
+      avalia veículos.
+    </p>
+
+    <h2>Encerrar a conta</h2>
+    <p>
+      Você pode pedir a exclusão da sua conta a qualquer momento pelo e-mail
+      <a [href]="'mailto:' + email" class="link">{{ email }}</a>. Apagamos seus dados como descrito na
+      <a routerLink="/privacidade" class="link">política de privacidade</a>.
+    </p>
+  } @else {
+    <p class="gh-rotulo">Versão beta · atualizado em {{ data }}</p>
+    <h1>Política de privacidade</h1>
+
+    <p>
+      Esta política explica quais dados a Octane guarda, para quê e quais são os seus direitos, de acordo com a Lei Geral
+      de Proteção de Dados (LGPD).
+    </p>
+
+    <h2>O que guardamos</h2>
+    <ul>
+      <li><strong>Conta:</strong> nome, nome de usuário, e-mail e senha (guardada de forma cifrada; ninguém consegue lê-la).</li>
+      <li><strong>Perfil:</strong> cidade, bio e a opção de perfil privado, se você preencher.</li>
+      <li>
+        <strong>Garagem:</strong> dados dos carros, modificações e fotos que você publica. Placa e valor de compra ficam
+        visíveis só para você.
+      </li>
+      <li><strong>Atividade:</strong> quem você segue, curtidas e comentários.</li>
+      <li>
+        <strong>Segurança:</strong> registros técnicos de acesso (como endereço IP e horário), para evitar invasões e abuso.
+      </li>
+    </ul>
+    <p>Removemos a localização e outros dados escondidos (EXIF) das fotos antes de guardá-las.</p>
+
+    <h2>Para que usamos</h2>
+    <ul>
+      <li>Fazer o app funcionar: mostrar sua garagem, o feed e a busca por cidade.</li>
+      <li>Enviar e-mails da conta, como o de redefinição de senha.</li>
+      <li>Proteger a sua conta e o app contra fraudes.</li>
+      <li>Melhorar o app durante os testes, a partir dos problemas reportados.</li>
+    </ul>
+    <p>Não vendemos seus dados e não usamos seus dados para publicidade.</p>
+
+    <h2>Com quem compartilhamos</h2>
+    <p>
+      Só com quem nos ajuda a operar o app: a empresa de hospedagem (servidor e banco de dados) e o serviço de envio de
+      e-mail. O que você publica fica visível para outras pessoas conforme as suas configurações de privacidade.
+    </p>
+
+    <h2>Por quanto tempo</h2>
+    <p>
+      Enquanto a sua conta existir. Se você pedir a exclusão, apagamos seus dados em até 30 dias, exceto o que a lei nos
+      obrigar a guardar por mais tempo.
+    </p>
+
+    <h2>Seus direitos</h2>
+    <p>
+      Você pode pedir acesso, correção, cópia ou exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo e-mail
+      <a [href]="'mailto:' + email" class="link">{{ email }}</a>. Nome, cidade, bio e privacidade do perfil você mesmo
+      altera em “Editar perfil”.
+    </p>
+
+    <h2>Navegador</h2>
+    <p>
+      Guardamos no seu navegador só o necessário para manter você conectado. Não usamos cookies de rastreamento ou de
+      publicidade.
+    </p>
+  }
+
+  <p class="voltar"><a routerLink="/" class="link">← Voltar para a Octane</a></p>
+</main>

@@ -1,0 +1,56 @@
+<gh-auth-layout>
+  <div>
+    <h1>Entrar na sua garagem</h1>
+    <p class="sub">Bom te ver de novo.</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+    @if (erro(); as mensagem) {
+      <p class="erro-geral" role="alert">{{ mensagem }}</p>
+    }
+
+    <label class="gh-field">
+      E-mail
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="voce@email.com"
+        autocomplete="email"
+        [attr.aria-invalid]="invalido('email')"
+      />
+      @if (invalido('email')) {
+        <span class="gh-field__error">Digite um e-mail válido.</span>
+      }
+    </label>
+
+    <label class="gh-field">
+      Senha
+      <input
+        type="password"
+        formControlName="senha"
+        placeholder="Sua senha"
+        autocomplete="current-password"
+        [attr.aria-invalid]="invalido('senha')"
+      />
+      @if (invalido('senha')) {
+        <span class="gh-field__error">A senha tem pelo menos 8 caracteres.</span>
+      }
+    </label>
+
+    <div class="linha">
+      <label class="lembrar">
+        <input type="checkbox" formControlName="manterConectado" />
+        Manter conectado
+      </label>
+      <a routerLink="/esqueci-senha" class="link">Esqueci a senha</a>
+    </div>
+
+    <button type="submit" class="gh-btn gh-btn--primary gh-btn--block" [disabled]="enviando()">
+      {{ enviando() ? 'Entrando…' : 'Entrar' }}
+    </button>
+  </form>
+
+  <div class="divisor"><span>ou</span></div>
+
+  <a routerLink="/cadastro" class="gh-btn gh-btn--block">Criar minha garagem</a>
+</gh-auth-layout>

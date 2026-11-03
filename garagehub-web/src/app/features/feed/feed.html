@@ -1,0 +1,98 @@
+<gh-site-header />
+
+<main>
+  <div class="coluna">
+    <div class="abas" role="tablist" aria-label="Feed">
+      <button type="button" role="tab" [class.ativa]="abaAtual() === 'explorar'" [attr.aria-selected]="abaAtual() === 'explorar'" (click)="trocarAba('explorar')">
+        Explorar
+      </button>
+      <button type="button" role="tab" [class.ativa]="abaAtual() === 'seguindo'" [attr.aria-selected]="abaAtual() === 'seguindo'" (click)="trocarAba('seguindo')">
+        Seguindo
+      </button>
+    </div>
+
+    @if (abaAtual() === 'explorar') {
+      <gh-filtro-local class="filtro-local" [lugar]="local$.lugar()" [ultimaCidade]="local$.ultimaCidade()" (mudou)="trocarLocal($event)" />
+    }
+
+    <div class="lista" aria-live="polite">
+      @for (item of itens(); track item.id) {
+        <gh-item-feed [item]="item" />
+      }
+
+      @if (carregando()) {
+        <p class="estado">Carregando novidades…</p>
+      } @else if (erro(); as mensagem) {
+        <div class="estado">
+          <p>{{ mensagem }}</p>
+          <button type="button" class="gh-btn" (click)="tentarDeNovo()">Tentar de novo</button>
+        </div>
+      } @else if (carregouUmaVez() && !itens().length) {
+        @if (abaAtual() === 'seguindo') {
+          <div class="vazio">
+            <h2>Seu feed ainda está quieto</h2>
+            <p>Siga garagens para ver aqui os carros novos, as modificações e as fotos que elas publicarem.</p>
+            <button type="button" class="gh-btn gh-btn--primary" (click)="trocarAba('explorar')">Explorar garagens</button>
+          </div>
+        } @else if (local$.temFiltro()) {
+          <div class="vazio">
+            <h2>Nada {{ nomeDoLugar() }} ainda</h2>
+            <p>Ninguém daí publicou na Octane ainda. Convide a galera dos encontros!</p>
+            <button type="button" class="gh-btn" (click)="trocarLocal({ tipo: 'brasil' })">Ver o Brasil todo</button>
+          </div>
+        } @else {
+          <div class="vazio">
+            <h2>Ainda não há novidades por aqui</h2>
+            <p>Quando alguém publicar um carro, uma modificação ou fotos, aparece aqui.</p>
+          </div>
+        }
+      } @else if (temMais()) {
+        <button type="button" class="gh-btn mais" (click)="carregarMais()">Carregar mais</button>
+      } @else if (itens().length) {
+        <p class="fim">Você viu todas as novidades.</p>
+      }
+    </div>
+  </div>
+
+  @if (listaSugestoes().length) {
+    <aside class="sugestoes" aria-labelledby="titulo-sugestoes">
+      <h2 id="titulo-sugestoes">Garagens para seguir</h2>
+      <ul>
+        @for (s of listaSugestoes(); track s.username) {
+          <li>
+            <a [routerLink]="['/', s.username]" class="sugestao">
+              @if (s.destaque; as d) {
+                <gh-foto-veiculo
+                  class="sugestao__foto"
+                  [carroceria]="d.carroceria"
+                  [cor]="d.corHex"
+                  [fotoUrl]="d.fotoUrl"
+                  [fotoModeloUrl]="d.fotoModeloUrl"
+                  [alt]="d.marca + ' ' + d.modelo"
+                  [selo]="false"
+                />
+              }
+              <span class="sugestao__info">
+                <strong>{{ s.nome }}</strong>
+                <span>
+                  &#64;{{ s.username }}
+                  @if (s.cidade) { · {{ s.mesmaCidade ? 'na sua cidade' : s.cidade }} }
+                </span>
+                <span>
+                  {{ s.carros }} {{ s.carros === 1 ? 'carro' : 'carros' }}
+                  @if (s.destaque) { · {{ s.destaque.modelo }} }
+                </span>
+              </span>
+            </a>
+            <gh-botao-seguir
+              [username]="s.username"
+              [euSigo]="seguidosAgora().has(s.username)"
+              [compacto]="true"
+              (mudou)="seguiuSugestao(s.username, $event.euSigo)"
+            />
+          </li>
+        }
+      </ul>
+    </aside>
+  }
+</main>

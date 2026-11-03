@@ -1,0 +1,146 @@
+@use '../../shared/styles/formulario';
+
+.envio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 36px 20px;
+  border: 2px dashed var(--gh-border-strong);
+  border-radius: 14px;
+  background: var(--gh-surface);
+  text-align: center;
+  cursor: pointer;
+  color: var(--gh-text-muted);
+  transition: border-color 0.15s, background-color 0.15s;
+
+  strong {
+    color: var(--gh-text);
+    font-size: 16px;
+  }
+
+  span {
+    font-size: 13px;
+  }
+
+  &:hover,
+  &--ativo,
+  &:focus-within {
+    border-color: var(--gh-accent);
+    background: var(--gh-accent-soft);
+  }
+
+  &--cheio {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.dica {
+  margin: 10px 0 20px;
+}
+
+.erro-geral {
+  margin-bottom: 16px;
+}
+
+.fila {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--gh-radius);
+    background: var(--gh-surface);
+    font-size: 13px;
+  }
+
+  &__nome {
+    flex: 1 1 160px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__status {
+    color: var(--gh-text-muted);
+  }
+
+  &--erro &__status {
+    color: var(--gh-danger-text);
+  }
+}
+
+.grade-fotos {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+
+  li {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--gh-surface-2);
+    aspect-ratio: 4 / 3;
+
+    &.ocupada {
+      opacity: 0.5;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.selo-capa {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--gh-accent);
+  color: var(--gh-on-accent);
+  font: 600 11px/1 var(--gh-font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.acoes-foto {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 10px;
+  background: linear-gradient(transparent, rgba(11, 13, 17, 0.85));
+
+  .gh-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+    background: rgba(11, 13, 17, 0.75);
+  }
+}
+
+.excluir-foto {
+  border-color: rgba(255, 138, 128, 0.5);
+  color: var(--gh-danger-text);
+}

@@ -1,0 +1,153 @@
+:host {
+  display: block;
+}
+
+.barra {
+  display: flex;
+  gap: 6px;
+}
+
+.acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--gh-text-muted);
+  font: 500 14px var(--gh-font-body);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--gh-surface-2);
+    color: var(--gh-text);
+  }
+
+  &.curtido {
+    color: var(--gh-accent-text);
+  }
+
+  &.ativa {
+    border-color: var(--gh-border);
+    color: var(--gh-text);
+  }
+}
+
+.comentarios {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gh-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comentario {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+
+  &__corpo {
+    flex: 1;
+    min-width: 0;
+
+    p {
+      margin: 0;
+      font-size: 13px;
+    }
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gh-surface-2);
+  border: 1px solid var(--gh-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 13px var(--gh-font-display);
+}
+
+.autor {
+  font-weight: 600;
+  margin-right: 6px;
+
+  &:hover {
+    color: var(--gh-accent-text);
+  }
+}
+
+.tempo,
+.info {
+  color: var(--gh-text-faint);
+  font-size: 12px;
+}
+
+.info {
+  margin: 0;
+
+  a {
+    color: var(--gh-accent-text);
+  }
+}
+
+.texto {
+  margin-top: 2px !important;
+  font-size: 14px !important;
+  line-height: 1.5;
+  color: var(--gh-text-2);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.apagar {
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  font-size: 12px;
+  color: var(--gh-text-faint);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--gh-danger-text);
+  }
+}
+
+.erro {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gh-danger-text);
+}
+
+.novo {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+
+  textarea {
+    flex: 1;
+    min-height: 40px;
+    max-height: 160px;
+    padding: 9px 12px;
+    resize: vertical;
+    background: var(--gh-input);
+    border: 1px solid var(--gh-border);
+    border-radius: var(--gh-radius);
+    color: var(--gh-text);
+    font: 400 14px var(--gh-font-body);
+
+    &:focus {
+      outline: none;
+      border-color: var(--gh-accent);
+    }
+  }
+
+  .gh-btn {
+    height: 40px;
+  }
+}

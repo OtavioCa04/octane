@@ -1,0 +1,38 @@
+<gh-auth-layout>
+  @if (enviadoPara(); as email) {
+    <div>
+      <h1>Confira seu e-mail</h1>
+      <p class="sub">
+        Se existir uma conta com <strong>{{ email }}</strong>, mandamos um link para criar uma senha nova.
+        Ele vale por 1 hora. Olhe também a caixa de spam.
+      </p>
+    </div>
+    <button type="button" class="gh-btn gh-btn--block" (click)="enviadoPara.set(null)">Usar outro e-mail</button>
+    <p class="sub"><a routerLink="/entrar" class="link">Voltar para o login</a></p>
+  } @else {
+    <div>
+      <h1>Esqueceu a senha?</h1>
+      <p class="sub">Digite o e-mail da sua conta e mandamos um link para criar uma senha nova.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      @if (erro(); as mensagem) {
+        <p class="erro-geral" role="alert">{{ mensagem }}</p>
+      }
+
+      <label class="gh-field">
+        E-mail
+        <input type="email" formControlName="email" placeholder="voce@email.com" autocomplete="email" [attr.aria-invalid]="invalido" />
+        @if (invalido) {
+          <span class="gh-field__error">Digite um e-mail válido.</span>
+        }
+      </label>
+
+      <button type="submit" class="gh-btn gh-btn--primary gh-btn--block" [disabled]="enviando()">
+        {{ enviando() ? 'Enviando…' : 'Enviar link' }}
+      </button>
+    </form>
+
+    <p class="sub">Lembrou? <a routerLink="/entrar" class="link">Voltar para o login</a></p>
+  }
+</gh-auth-layout>

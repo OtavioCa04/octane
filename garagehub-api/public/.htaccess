@@ -1,0 +1,8 @@
+# Apache: manda tudo que não for arquivo para o index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+# Repassa o header Authorization para o PHP (alguns servidores removem)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

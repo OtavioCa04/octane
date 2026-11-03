@@ -1,0 +1,89 @@
+<gh-site-header />
+
+<main>
+  <a [routerLink]="['/', auth.usuario()!.username]" class="voltar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Minha garagem
+  </a>
+
+  <h1>Editar perfil</h1>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+    @if (erro(); as mensagem) {
+      <p class="erro-geral" role="alert">{{ mensagem }}</p>
+    }
+
+    <section class="bloco">
+      <h2>Foto de perfil</h2>
+      <div class="foto-perfil">
+        <div class="foto-perfil__anel" aria-hidden="true">
+          @if (auth.usuario()!.avatarUrl; as url) {
+            <img class="gh-avatar-foto" [src]="url" alt="" />
+          } @else {
+            <span>{{ iniciais }}</span>
+          }
+        </div>
+        <div class="foto-perfil__acoes">
+          <label class="gh-btn" [class.desativado]="enviandoFoto()">
+            <input type="file" accept="image/*" class="sr-only" (change)="escolherFoto($event)" [disabled]="enviandoFoto()" />
+            {{ enviandoFoto() ? 'Enviando…' : auth.usuario()!.avatarUrl ? 'Trocar foto' : 'Escolher foto' }}
+          </label>
+          @if (auth.usuario()!.avatarUrl && !enviandoFoto()) {
+            <button type="button" class="gh-btn" (click)="removerFoto()">Remover</button>
+          }
+          <p class="dica">Usamos o centro da foto, em formato quadrado. A foto muda na hora, sem precisar salvar.</p>
+          @if (erroFoto(); as msg) {
+            <p class="aviso" role="alert">{{ msg }}</p>
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco">
+      <h2>Sobre você</h2>
+      <label class="gh-field">
+        Nome
+        <input type="text" formControlName="nome" autocomplete="name" [attr.aria-invalid]="!!erroDo('nome')" />
+        @if (erroDo('nome'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+      </label>
+      <label class="gh-field">
+        Bio
+        <textarea formControlName="bio" rows="3" placeholder="Que tipo de carro você curte? Qual é o seu projeto?"></textarea>
+        @if (erroDo('bio'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+      </label>
+      <p class="dica">Seu nome de usuário é &#64;{{ auth.usuario()!.username }} e não muda.</p>
+    </section>
+
+    <section class="bloco">
+      <h2>Sua cidade</h2>
+      <div class="gh-field">
+        <label for="cidade">Cidade</label>
+        <gh-seletor-cidade idCampo="cidade" [(cidade)]="cidade" />
+        @if (errosApi()['cidadeId']; as msg) { <span class="gh-field__error">{{ msg }}</span> }
+      </div>
+      <p class="dica">
+        Serve para você achar garagens perto e aparecer para quem é da sua região. Mostramos só a cidade, nunca bairro ou endereço.
+      </p>
+    </section>
+
+    <section class="bloco">
+      <h2>Privacidade</h2>
+      <label class="check">
+        <input type="checkbox" formControlName="perfilPrivado" />
+        <span>
+          <strong>Perfil privado</strong>
+          Sua garagem some da busca, do Explorar e das sugestões, e ninguém consegue seguir você. Você continua vendo tudo normalmente.
+        </span>
+      </label>
+    </section>
+
+    <div class="acoes">
+      <button type="submit" class="gh-btn gh-btn--primary" [disabled]="salvando()">
+        {{ salvando() ? 'Salvando…' : 'Salvar perfil' }}
+      </button>
+      <a [routerLink]="['/', auth.usuario()!.username]" class="gh-btn">Cancelar</a>
+    </div>
+  </form>
+</main>

@@ -1,0 +1,30 @@
+<section class="foto" aria-label="Foto de destaque">
+  @if (foto.url) {
+    <img [src]="foto.url" [alt]="foto.legenda" />
+  } @else {
+    <gh-foto-veiculo class="foto__silhueta" [carroceria]="foto.carroceria" [cor]="foto.cor" [alt]="foto.legenda" />
+  }
+  <div class="foto__texto">
+    <p class="foto__titulo">Cada carro tem uma história.</p>
+    <p class="foto__sub">Mostre a sua garagem e acompanhe os projetos de quem você segue.</p>
+    <p class="foto__legenda">
+      {{ foto.legenda }}
+      @if (foto.credito) {
+        · {{ foto.credito }}
+      }
+    </p>
+  </div>
+</section>
+
+<section class="painel">
+  <a routerLink="/entrar" class="painel__logo"><gh-logo [marca]="true" /></a>
+
+  <div class="painel__conteudo">
+    <ng-content />
+  </div>
+
+  <p class="painel__termos">
+    Ao continuar, você concorda com os <a routerLink="/termos" class="link">Termos de uso</a> e a
+    <a routerLink="/privacidade" class="link">Política de privacidade</a>.
+  </p>
+</section>

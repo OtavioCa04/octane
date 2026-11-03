@@ -1,0 +1,125 @@
+<gh-site-header />
+
+<main>
+  <a [routerLink]="voltar()" class="voltar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    @if (veiculo(); as v) {
+      {{ v.marca }} {{ v.modelo }}
+    } @else {
+      Voltar
+    }
+  </a>
+
+  <h1>{{ editando() ? 'Editar modificação' : 'Nova modificação' }}</h1>
+
+  @if (carro.isLoading()) {
+    <p class="estado">Carregando…</p>
+  } @else if (!veiculo()) {
+    <p class="estado">Esse carro não existe ou não é seu.</p>
+  } @else if (editando() && !modificacao()) {
+    <p class="estado">Essa modificação não existe ou já foi excluída.</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      @if (erro(); as mensagem) {
+        <p class="erro-geral" role="alert">{{ mensagem }}</p>
+      }
+
+      <section class="bloco">
+        <h2>O que foi feito</h2>
+        <div class="grade grade--2">
+          <label class="gh-field">
+            Modificação
+            <input type="text" formControlName="nome" placeholder="Coilover, remap stage 1, rodas 18…" [attr.aria-invalid]="!!erroDo('nome')" />
+            @if (erroDo('nome'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+          <label class="gh-field">
+            Categoria
+            <input type="text" formControlName="categoria" list="categorias" placeholder="Suspensão" [attr.aria-invalid]="!!erroDo('categoria')" />
+            <datalist id="categorias">
+              @for (c of categorias; track c) {
+                <option [value]="c"></option>
+              }
+            </datalist>
+            @if (erroDo('categoria'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+        </div>
+
+        <div class="chips" aria-label="Categorias comuns">
+          @for (c of categorias; track c) {
+            <button
+              type="button"
+              class="chip"
+              [class.ativo]="form.controls.categoria.value === c"
+              (click)="form.controls.categoria.setValue(c)"
+            >
+              {{ c }}
+            </button>
+          }
+        </div>
+
+        <label class="gh-field">
+          Detalhes
+          <textarea formControlName="descricao" rows="4" placeholder="Como ficou, o que mudou no carro, se valeu a pena."></textarea>
+          @if (erroDo('descricao'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+        </label>
+      </section>
+
+      <section class="bloco">
+        <h2>Quando e onde</h2>
+        <div class="grade grade--2">
+          <label class="gh-field">
+            Data
+            <input type="date" formControlName="data" [max]="hoje" [attr.aria-invalid]="!!erroDo('data')" />
+            @if (erroDo('data'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+          <label class="gh-field">
+            Quilometragem
+            <input type="number" formControlName="quilometragem" inputmode="numeric" placeholder="98000" [attr.aria-invalid]="!!erroDo('quilometragem')" />
+            @if (erroDo('quilometragem'); as msg) {
+              <span class="gh-field__error">{{ msg }}</span>
+            } @else {
+              <span class="dica">O carro está com {{ km(veiculo()!.quilometragem) }} hoje.</span>
+            }
+          </label>
+          <label class="gh-field">
+            Marca da peça
+            <input type="text" formControlName="marcaPeca" placeholder="KW, BBS, Bilstein…" [attr.aria-invalid]="!!erroDo('marcaPeca')" />
+            @if (erroDo('marcaPeca'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+          <label class="gh-field">
+            Oficina ou loja
+            <input type="text" formControlName="oficina" placeholder="Quem instalou" [attr.aria-invalid]="!!erroDo('oficina')" />
+            @if (erroDo('oficina'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+        </div>
+      </section>
+
+      <section class="bloco">
+        <h2>Só você vê</h2>
+        <label class="gh-field valor">
+          Quanto custou (R$)
+          <input type="number" formControlName="valor" inputmode="decimal" placeholder="6500" [attr.aria-invalid]="!!erroDo('valor')" />
+          @if (erroDo('valor'); as msg) {
+            <span class="gh-field__error">{{ msg }}</span>
+          } @else {
+            <span class="dica">O valor nunca aparece na sua garagem pública.</span>
+          }
+        </label>
+      </section>
+
+      <div class="acoes">
+        <button type="submit" class="gh-btn gh-btn--primary" [disabled]="salvando()">
+          {{ salvando() ? 'Salvando…' : editando() ? 'Salvar alterações' : 'Adicionar à linha do tempo' }}
+        </button>
+        <a [routerLink]="voltar()" class="gh-btn">Cancelar</a>
+        @if (editando()) {
+          <button type="button" class="gh-btn excluir" (click)="excluir()" [disabled]="excluindo()">
+            {{ excluindo() ? 'Excluindo…' : 'Excluir modificação' }}
+          </button>
+        }
+      </div>
+    </form>
+  }
+</main>

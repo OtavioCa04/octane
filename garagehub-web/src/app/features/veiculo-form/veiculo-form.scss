@@ -1,0 +1,173 @@
+@use '../../shared/styles/formulario';
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+form {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bloco__titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gh-field input[type='search'] + select {
+  margin-top: 6px;
+}
+
+.cor {
+  padding: 4px !important;
+  cursor: pointer;
+}
+
+.status {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  legend {
+    font-size: 13px;
+    color: var(--gh-text-2);
+    margin-bottom: 8px;
+  }
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--gh-border-strong);
+    border-radius: var(--gh-radius);
+    cursor: pointer;
+    font-size: 14px;
+
+    &.ativo {
+      border-color: var(--gh-accent);
+      background: var(--gh-accent-soft);
+      color: var(--gh-accent-text);
+    }
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  label:focus-within {
+    outline: 2px solid var(--gh-accent);
+    outline-offset: 2px;
+  }
+}
+
+.fipe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: var(--gh-radius);
+  background: var(--gh-surface-2);
+
+  &__rotulo {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gh-text-muted);
+  }
+
+  strong {
+    font: 800 28px/1.2 var(--gh-font-display);
+  }
+
+  &__meta {
+    font-size: 12px;
+    color: var(--gh-text-faint);
+    text-align: right;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--gh-text-2);
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gh-accent);
+  }
+}
+
+.previa {
+  flex: 1 1 260px;
+  max-width: 340px;
+  position: sticky;
+  top: 24px;
+
+  &__rotulo {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gh-text-muted);
+  }
+}
+
+.card {
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  overflow: hidden;
+
+  &__foto {
+    aspect-ratio: 16 / 10;
+  }
+
+  &__info {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--gh-text-muted);
+
+    strong {
+      font: 800 22px/1.1 var(--gh-font-display);
+      color: var(--gh-text);
+    }
+  }
+
+  &__rodape {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--gh-border);
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .previa {
+    position: static;
+    max-width: none;
+  }
+}

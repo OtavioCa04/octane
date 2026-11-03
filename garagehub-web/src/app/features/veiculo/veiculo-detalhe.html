@@ -1,0 +1,184 @@
+<gh-site-header />
+
+<main>
+  <a [routerLink]="['/', username()]" class="voltar gh-mono">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Garagem de &#64;{{ username() }}
+  </a>
+
+  @if (dados.isLoading()) {
+    <p class="estado">Carregando carro…</p>
+  } @else if (dados.error()) {
+    <div class="estado">
+      <p>Não foi possível carregar esse carro agora.</p>
+      <button type="button" class="gh-btn" (click)="dados.reload()">Tentar de novo</button>
+    </div>
+  } @else if (veiculo(); as v) {
+    <section class="topo">
+      <div class="galeria" [attr.data-fotos]="fotos().length > 2 ? 'varias' : fotos().length">
+        @if (fotos().length) {
+          <button type="button" class="galeria__capa galeria__foto" (click)="aberta.set(0)" [attr.aria-label]="'Ver fotos do ' + v.modelo">
+            <img [src]="fotos()[0].url" [alt]="v.marca + ' ' + v.modelo" />
+          </button>
+          @for (f of fotos().slice(1, 3); track f.id; let i = $index) {
+            <button type="button" class="galeria__mini galeria__foto" (click)="aberta.set(i + 1)" [attr.aria-label]="'Ver foto ' + (i + 2)">
+              <img [src]="f.url" alt="" loading="lazy" />
+              @if (i === 1 && fotos().length > 3) {
+                <span class="galeria__restante gh-mono">+{{ fotos().length - 3 }} FOTOS</span>
+              }
+            </button>
+          }
+        } @else {
+          <gh-foto-veiculo
+            class="galeria__capa"
+            [carroceria]="v.carroceria"
+            [cor]="v.corHex"
+            [fotoModeloUrl]="v.fotoModeloUrl"
+            [alt]="v.marca + ' ' + v.modelo"
+          />
+        }
+        @if (ehDono()) {
+          <a [routerLink]="['/garagem', v.id, 'fotos']" class="gh-btn gh-vidro galeria__gerenciar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3v13H4z" /><circle cx="12" cy="13" r="4" /></svg>
+            {{ fotos().length ? 'Gerenciar fotos' : 'Adicionar fotos' }}
+          </a>
+        }
+      </div>
+
+      @if (aberta() !== null) {
+        <gh-visualizador-fotos [fotos]="fotos()" [indice]="aberta()!" (indiceChange)="aberta.set($event)" [titulo]="v.marca + ' ' + v.modelo" (fechar)="aberta.set(null)" />
+      }
+
+      <div class="resumo gh-vidro">
+        <gh-status-chip [status]="v.status" />
+        <div>
+          <h1>{{ v.marca }} {{ v.modelo }}</h1>
+          <p class="subtitulo gh-mono">{{ v.versao }} · {{ v.anoFabricacao }}/{{ v.anoModelo }}</p>
+          <p class="dono">de <a [routerLink]="['/', username()]">&#64;{{ username() }}</a></p>
+        </div>
+
+        <dl class="numeros">
+          <div class="gh-carbono">
+            <dt class="gh-rotulo">Quilometragem</dt>
+            <dd>{{ km(v.quilometragem) }}</dd>
+          </div>
+          <div class="gh-carbono">
+            <dt class="gh-rotulo">Mods</dt>
+            <dd>{{ v.modificacoes.length }}</dd>
+          </div>
+          <div class="gh-carbono">
+            <dt class="gh-rotulo">Investido</dt>
+            <dd class="privado">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
+              </svg>
+              Privado
+            </dd>
+          </div>
+        </dl>
+
+        @if (v.valorFipe) {
+          <div class="fipe gh-carbono">
+            <span class="gh-rotulo">Tabela FIPE{{ v.dataConsultaFipe ? ' · ' + mesAno(v.dataConsultaFipe) : '' }}</span>
+            <p class="fipe__valor gh-mono">{{ moeda(v.valorFipe) }}</p>
+            <p class="fipe__nota">Valor de referência, não é preço de venda.</p>
+          </div>
+        }
+
+        @if (v.descricao) {
+          <p class="descricao">{{ v.descricao }}</p>
+        }
+
+        <div class="acoes">
+          <button type="button" class="gh-btn" (click)="copiarLink()">
+            {{ linkCopiado() ? 'Link copiado' : 'Compartilhar carro' }}
+          </button>
+          @if (ehDono()) {
+            <a [routerLink]="['/garagem', v.id, 'editar']" class="gh-btn">Editar carro</a>
+          } @else {
+            <gh-botao-seguir [veiculoId]="v.id" [euSigo]="social()?.euSigo ?? v.euSigo ?? false" (mudou)="social.set($event)" />
+          }
+        </div>
+        @if ((social()?.seguidores ?? v.seguidores ?? 0) > 0) {
+          <p class="seguidores-carro">
+            {{ social()?.seguidores ?? v.seguidores }}
+            {{ (social()?.seguidores ?? v.seguidores) === 1 ? 'pessoa segue' : 'pessoas seguem' }} este carro
+          </p>
+        }
+        @if (v.interacao) {
+          <gh-interacoes class="interacoes-carro" [interacao]="v.interacao" />
+        }
+      </div>
+    </section>
+
+    <section class="detalhes">
+      <div class="ficha">
+        <p class="gh-rotulo ficha__titulo">Ficha técnica</p>
+        <dl>
+          <div class="gh-vidro"><dt class="gh-rotulo">Motor</dt><dd [class.apagado]="!v.motor">{{ v.motor ?? 'Não informado' }}</dd></div>
+          <div class="gh-vidro"><dt class="gh-rotulo">Câmbio</dt><dd [class.apagado]="!v.cambio">{{ v.cambio ?? 'Não informado' }}</dd></div>
+          <div class="gh-vidro"><dt class="gh-rotulo">Combustível</dt><dd [class.apagado]="!v.combustivel">{{ v.combustivel ?? 'Não informado' }}</dd></div>
+          <div class="gh-vidro"><dt class="gh-rotulo">Cor</dt><dd [class.apagado]="!v.cor">{{ v.cor ?? 'Não informada' }}</dd></div>
+          <div class="gh-carbono"><dt class="gh-rotulo">Placa</dt><dd class="apagado">Oculta</dd></div>
+        </dl>
+      </div>
+
+      <div class="tempo">
+        <div class="tempo__topo">
+          <h2>Linha do tempo do projeto</h2>
+          @if (ehDono()) {
+            <a [routerLink]="['/garagem', v.id, 'modificacoes', 'nova']" class="gh-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+              Adicionar modificação
+            </a>
+          }
+        </div>
+        @if (linhaDoTempo().length) {
+          <ol>
+            @for (m of linhaDoTempo(); track m.id; let primeiro = $first) {
+              <li [class.recente]="primeiro">
+                <span class="ponto" aria-hidden="true"></span>
+                <div class="item gh-vidro">
+                  <p class="meta gh-mono">
+                    @if (m.data) { {{ mesAno(m.data) }} · }
+                    {{ m.categoria }}
+                  </p>
+                  <p class="nome">{{ m.nome }}</p>
+                  @if (detalhesDa(m); as extra) {
+                    <p class="extra">{{ extra }}</p>
+                  }
+                  @if (m.descricao) {
+                    <p class="descricao-mod">{{ m.descricao }}</p>
+                  }
+                  @if (m.interacao) {
+                    <gh-interacoes class="interacoes-mod" [interacao]="m.interacao" />
+                  }
+                </div>
+                @if (ehDono()) {
+                  <a
+                    [routerLink]="['/garagem', v.id, 'modificacoes', m.id, 'editar']"
+                    class="editar"
+                    [attr.aria-label]="'Editar ' + m.nome"
+                  >
+                    Editar
+                  </a>
+                }
+              </li>
+            }
+          </ol>
+        } @else if (ehDono()) {
+          <div class="vazio">
+            <p>Nenhuma modificação ainda. Registre cada peça e serviço para montar a história do projeto.</p>
+            <a [routerLink]="['/garagem', v.id, 'modificacoes', 'nova']" class="gh-btn gh-btn--primary">Registrar a primeira</a>
+          </div>
+        } @else {
+          <p class="vazio">Original de fábrica. Nenhuma modificação registrada.</p>
+        }
+      </div>
+    </section>
+  } @else {
+    <p class="estado">Esse carro não existe ou é privado.</p>
+  }
+</main>

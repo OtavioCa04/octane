@@ -1,0 +1,85 @@
+<article>
+  <header>
+    <a [routerLink]="['/', item().autor.username]" class="avatar" [attr.aria-label]="'Garagem de ' + item().autor.nome">
+      @if (item().autor.avatarUrl; as url) {
+        <img class="gh-avatar-foto" [src]="url" alt="" />
+      } @else {
+        {{ item().autor.iniciais }}
+      }
+    </a>
+    <p>
+      <a [routerLink]="['/', item().autor.username]" class="autor">{{ item().autor.nome }}</a>
+      {{ acao() }}
+      <span class="tempo">· {{ tempo() }}</span>
+    </p>
+  </header>
+
+  @switch (item().tipo) {
+    @case ('carro') {
+      <a [routerLink]="linkCarro()" class="carro-novo">
+        <gh-foto-veiculo
+          class="carro-novo__foto"
+          [carroceria]="item().veiculo.carroceria"
+          [cor]="item().veiculo.corHex"
+          [fotoUrl]="item().veiculo.fotoUrl"
+          [fotoModeloUrl]="item().veiculo.fotoModeloUrl"
+          [alt]="nomeCarro()"
+        />
+        <div class="carro-novo__info">
+          <gh-status-chip [status]="item().veiculo.status" />
+          <strong>{{ nomeCarro() }}</strong>
+          @if (item().veiculo.versao) {
+            <span>{{ item().veiculo.versao }} · {{ item().veiculo.anoModelo }}</span>
+          }
+        </div>
+      </a>
+    }
+
+    @case ('modificacao') {
+      @if (item(); as i) {
+        @if (i.tipo === 'modificacao') {
+          <a [routerLink]="linkCarro()" class="mod">
+            <gh-foto-veiculo
+              class="mod__foto"
+              [carroceria]="i.veiculo.carroceria"
+              [cor]="i.veiculo.corHex"
+              [fotoUrl]="i.veiculo.fotoUrl"
+              [fotoModeloUrl]="i.veiculo.fotoModeloUrl"
+              [alt]="nomeCarro()"
+            />
+            <div class="mod__info">
+              <span class="mod__meta">{{ i.modificacao.categoria }} · {{ nomeCarro() }}</span>
+              <strong>{{ i.modificacao.nome }}</strong>
+              @if (detalhesMod()) {
+                <span class="mod__extra">{{ detalhesMod() }}</span>
+              }
+              @if (i.modificacao.descricao) {
+                <p class="mod__descricao">{{ i.modificacao.descricao }}</p>
+              }
+            </div>
+          </a>
+        }
+      }
+    }
+
+    @case ('fotos') {
+      @if (item(); as i) {
+        @if (i.tipo === 'fotos') {
+          <a [routerLink]="linkCarro()" class="fotos" [attr.data-qtd]="i.fotos.length">
+            @for (f of i.fotos; track f.id; let idx = $index) {
+              <span class="fotos__item">
+                <img [src]="f.url" [alt]="nomeCarro() + ', foto ' + (idx + 1)" loading="lazy" />
+                @if (idx === 3 && i.quantidade > 4) {
+                  <span class="fotos__mais">+{{ i.quantidade - 4 }}</span>
+                }
+              </span>
+            }
+          </a>
+          <a [routerLink]="linkCarro()" class="fotos__carro">{{ nomeCarro() }}</a>
+        }
+      }
+    }
+  }
+
+  <gh-interacoes [interacao]="item().interacao" />
+</article>

@@ -1,0 +1,260 @@
+<gh-site-header />
+
+<main>
+  <a [routerLink]="voltar()" class="voltar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    Voltar
+  </a>
+
+  <h1>{{ editando() ? 'Editar carro' : 'Adicionar carro' }}</h1>
+
+  @if (editando() && existente.isLoading()) {
+    <p class="estado">Carregando carro…</p>
+  } @else if (editando() && !existente.isLoading() && !(existente.hasValue() && existente.value())) {
+    <p class="estado">Esse carro não existe ou não é seu.</p>
+  } @else {
+    <div class="layout">
+      <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+        @if (erro(); as mensagem) {
+          <p class="erro-geral" role="alert">{{ mensagem }}</p>
+        }
+
+        <!-- 1. Qual é o carro -->
+        <section class="bloco">
+          <div class="bloco__titulo">
+            <h2>Qual é o carro</h2>
+            @if (modo() === 'fipe') {
+              <button type="button" class="link" (click)="usarManual()">Não achei, vou digitar</button>
+            } @else {
+              <button type="button" class="link" (click)="usarFipe()">Buscar na Tabela FIPE</button>
+            }
+          </div>
+
+          @if (modo() === 'fipe') {
+            @if (marcas.error()) {
+              <p class="aviso">
+                {{ mensagemDeErro(marcas.error()) }}
+                <button type="button" class="link" (click)="usarManual()">Preencher manualmente</button>
+              </p>
+            } @else {
+              <div class="grade grade--3">
+                <label class="gh-field">
+                  Marca
+                  <select [value]="marcaId()" (change)="escolherMarca($any($event.target).value)" [disabled]="marcas.isLoading()">
+                    <option value="">{{ marcas.isLoading() ? 'Carregando…' : 'Escolha a marca' }}</option>
+                    @if (marcas.hasValue()) {
+                      @for (m of marcas.value(); track m.id) {
+                        <option [value]="m.id">{{ m.nome }}</option>
+                      }
+                    }
+                  </select>
+                </label>
+
+                <div class="gh-field">
+                  <label for="modelo-fipe">Modelo e versão</label>
+                  <input
+                    type="search"
+                    placeholder="Filtrar: golf gti, civic si…"
+                    [value]="filtroModelo()"
+                    (input)="filtroModelo.set($any($event.target).value)"
+                    [disabled]="!marcaId()"
+                    aria-label="Filtrar modelos"
+                  />
+                  <select id="modelo-fipe" [value]="modeloId()" (change)="escolherModelo($any($event.target).value)" [disabled]="!marcaId() || modelos.isLoading()">
+                    <option value="">
+                      {{ !marcaId() ? 'Escolha a marca antes' : modelos.isLoading() ? 'Carregando…' : contagemModelos() }}
+                    </option>
+                    @for (m of modelosFiltrados(); track m.id) {
+                      <option [value]="m.id">{{ m.nome }}</option>
+                    }
+                  </select>
+                </div>
+
+                <label class="gh-field">
+                  Ano e combustível
+                  <select [value]="anoId()" (change)="anoId.set($any($event.target).value)" [disabled]="!modeloId() || anos.isLoading()">
+                    <option value="">{{ !modeloId() ? 'Escolha o modelo antes' : anos.isLoading() ? 'Carregando…' : 'Escolha o ano' }}</option>
+                    @if (anos.hasValue()) {
+                      @for (a of anos.value(); track a.id) {
+                        <option [value]="a.id">{{ a.nome }}</option>
+                      }
+                    }
+                  </select>
+                </label>
+              </div>
+
+              @if (modelos.error() || anos.error() || detalhe.error(); as e) {
+                <p class="aviso">{{ mensagemDeErro(e) }}</p>
+              }
+              @if (detalhe.isLoading()) {
+                <p class="dica">Consultando a Tabela FIPE…</p>
+              }
+            }
+          }
+
+          @if (fipe().valorFipe !== null) {
+            <div class="fipe">
+              <div>
+                <span class="fipe__rotulo">FIPE de referência</span>
+                <strong>{{ moeda(fipe().valorFipe!) }}</strong>
+              </div>
+              <div class="fipe__meta">
+                Código {{ fipe().fipeCodigo }}
+                @if (fipe().dataConsultaFipe) {
+                  <br />Consultado em {{ mesAno(fipe().dataConsultaFipe!) }}
+                }
+              </div>
+            </div>
+          }
+
+          @if (modo() === 'manual' || fipe().fipeAnoId) {
+            @if (modo() === 'fipe') {
+              <p class="dica">Confira e ajuste o que precisar.</p>
+            }
+            <div class="grade grade--3">
+              <label class="gh-field">
+                Marca
+                <input type="text" formControlName="marca" placeholder="Volkswagen" [attr.aria-invalid]="!!erroDo('marca')" />
+                @if (erroDo('marca'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+              </label>
+              <label class="gh-field">
+                Modelo
+                <input type="text" formControlName="modelo" placeholder="Golf GTI" [attr.aria-invalid]="!!erroDo('modelo')" />
+                @if (erroDo('modelo'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+              </label>
+              <label class="gh-field">
+                Versão
+                <input type="text" formControlName="versao" placeholder="2.0 TSI" />
+              </label>
+            </div>
+          }
+        </section>
+
+        <!-- 2. Sobre o carro -->
+        <section class="bloco">
+          <h2>Sobre o seu carro</h2>
+
+          <fieldset class="status">
+            <legend>Esse carro está</legend>
+            @for (s of statusOpcoes; track s[0]) {
+              <label [class.ativo]="form.controls.status.value === s[0]">
+                <input type="radio" formControlName="status" [value]="s[0]" />
+                {{ s[1] }}
+              </label>
+            }
+          </fieldset>
+
+          <div class="grade grade--3">
+            <label class="gh-field">
+              Ano de fabricação
+              <input type="number" formControlName="anoFabricacao" inputmode="numeric" placeholder="2015" [attr.aria-invalid]="!!erroDo('anoFabricacao')" />
+              @if (erroDo('anoFabricacao'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+            </label>
+            <label class="gh-field">
+              Ano-modelo
+              <input type="number" formControlName="anoModelo" inputmode="numeric" placeholder="2016" [attr.aria-invalid]="!!erroDo('anoModelo')" />
+              @if (erroDo('anoModelo'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+            </label>
+            <label class="gh-field">
+              Quilometragem
+              <input type="number" formControlName="quilometragem" inputmode="numeric" placeholder="98400" [attr.aria-invalid]="!!erroDo('quilometragem')" />
+              @if (erroDo('quilometragem'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+            </label>
+          </div>
+
+          <div class="grade grade--3">
+            <label class="gh-field">
+              Motor
+              <input type="text" formControlName="motor" placeholder="2.0 TSI, 220 cv" />
+            </label>
+            <label class="gh-field">
+              Câmbio
+              <input type="text" formControlName="cambio" placeholder="Manual, 6 marchas" />
+            </label>
+            <label class="gh-field">
+              Combustível
+              <input type="text" formControlName="combustivel" placeholder="Gasolina" />
+            </label>
+          </div>
+
+          <div class="grade grade--3">
+            <label class="gh-field">
+              Carroceria
+              <select formControlName="carroceria">
+                <option value="">Escolha</option>
+                @for (c of carrocerias; track c.id) {
+                  <option [value]="c.id">{{ c.label }}</option>
+                }
+              </select>
+            </label>
+            <label class="gh-field">
+              Cor
+              <input type="text" formControlName="cor" placeholder="Branco Puro" />
+            </label>
+            <label class="gh-field">
+              Tom da cor
+              <input type="color" formControlName="corHex" class="cor" />
+            </label>
+          </div>
+
+          <label class="gh-field">
+            Sobre o carro
+            <textarea formControlName="descricao" rows="4" placeholder="A história dele, o que você já fez e o que planeja."></textarea>
+            @if (erroDo('descricao'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+          </label>
+        </section>
+
+        <!-- 3. Privado -->
+        <section class="bloco">
+          <h2>Só você vê</h2>
+          <p class="dica">Placa e preço nunca aparecem na sua garagem pública.</p>
+          <div class="grade grade--2">
+            <label class="gh-field">
+              Placa
+              <input type="text" formControlName="placa" placeholder="ABC1D23" autocapitalize="characters" [attr.aria-invalid]="!!erroDo('placa')" />
+              @if (erroDo('placa'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+            </label>
+            <label class="gh-field">
+              Preço de compra (R$)
+              <input type="number" formControlName="precoCompra" inputmode="decimal" placeholder="95000" [attr.aria-invalid]="!!erroDo('precoCompra')" />
+              @if (erroDo('precoCompra'); as msg) { <span class="gh-field__error">{{ msg }}</span> }
+            </label>
+          </div>
+          <label class="check">
+            <input type="checkbox" formControlName="visivel" />
+            Mostrar este carro na minha garagem pública
+          </label>
+        </section>
+
+        <div class="acoes">
+          <button type="submit" class="gh-btn gh-btn--primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando…' : editando() ? 'Salvar alterações' : 'Adicionar à garagem' }}
+          </button>
+          <a [routerLink]="voltar()" class="gh-btn">Cancelar</a>
+          @if (editando()) {
+            <button type="button" class="gh-btn excluir" (click)="excluir()" [disabled]="excluindo()">
+              {{ excluindo() ? 'Excluindo…' : 'Excluir carro' }}
+            </button>
+          }
+        </div>
+      </form>
+
+      <aside class="previa" aria-label="Prévia do card">
+        <span class="previa__rotulo">Prévia</span>
+        <div class="card">
+          <gh-foto-veiculo class="card__foto" [carroceria]="previa().carroceria || null" [cor]="previa().corHex" />
+          <div class="card__info">
+            <strong>{{ (previa().marca || 'Marca') + ' ' + (previa().modelo || 'Modelo') }}</strong>
+            <span>{{ previa().versao || 'Versão' }}</span>
+            <span class="card__rodape">
+              {{ previa().anoFabricacao || '----' }}/{{ previa().anoModelo || '----' }}
+              @if (previa().quilometragem !== null) { · {{ previa().quilometragem }} km }
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</main>

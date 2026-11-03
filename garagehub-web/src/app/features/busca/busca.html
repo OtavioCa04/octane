@@ -1,0 +1,80 @@
+<gh-site-header />
+
+<main>
+  @if (termo().length < 2) {
+    <h1>Buscar</h1>
+    <p class="estado">Busque por pessoas, carros ou peças: "golf gti", "opala", "coilover kw".</p>
+  } @else {
+    <h1>Resultados para "{{ termo() }}"</h1>
+    <gh-filtro-local class="filtro-local" [lugar]="local$.lugar()" [ultimaCidade]="local$.ultimaCidade()" (mudou)="trocarLocal($event)" />
+
+    @if (resultado.isLoading()) {
+      <p class="estado">Buscando…</p>
+    } @else if (resultado.error()) {
+      <div class="estado">
+        <p>{{ mensagemDeErro(resultado.error()) }}</p>
+        <button type="button" class="gh-btn" (click)="resultado.reload()">Tentar de novo</button>
+      </div>
+    } @else if (vazio()) {
+      <div class="estado">
+        <p>Nada encontrado{{ local$.temFiltro() ? ' nesse lugar' : '' }}.</p>
+        @if (local$.temFiltro()) {
+          <button type="button" class="gh-btn" (click)="trocarLocal({ tipo: 'brasil' })">Buscar no Brasil todo</button>
+        } @else {
+          <p class="dica">Tente outro nome de modelo, marca ou peça.</p>
+        }
+      </div>
+    } @else {
+      @if (dados().pessoas.length) {
+        <section>
+          <h2>Pessoas</h2>
+          <ul class="pessoas">
+            @for (p of dados().pessoas; track p.username) {
+              <li>
+                <a [routerLink]="['/', p.username]" class="pessoa">
+                  <span class="avatar" aria-hidden="true">
+                    @if (p.avatarUrl; as url) { <img class="gh-avatar-foto" [src]="url" alt="" /> } @else { {{ p.iniciais }} }
+                  </span>
+                  <span class="pessoa__info">
+                    <strong>{{ p.nome }}</strong>
+                    <span>
+                      &#64;{{ p.username }} · {{ p.carros }} {{ p.carros === 1 ? 'carro' : 'carros' }}
+                      @if (p.cidade) { · {{ p.cidade }} }
+                    </span>
+                  </span>
+                </a>
+                @if (p.username !== auth.usuario()?.username) {
+                  <gh-botao-seguir [username]="p.username" [compacto]="true" />
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (dados().carros.length) {
+        <section>
+          <h2>Carros</h2>
+          <div class="carros">
+            @for (c of dados().carros; track c.id) {
+              <a [routerLink]="['/', c.dono.username, c.slug]" class="carro">
+                <div class="carro__foto">
+                  <gh-foto-veiculo [carroceria]="c.carroceria" [cor]="c.corHex" [fotoUrl]="c.fotoUrl" [fotoModeloUrl]="c.fotoModeloUrl" [alt]="c.marca + ' ' + c.modelo" />
+                  <gh-status-chip class="carro__chip" [status]="c.status" />
+                </div>
+                <div class="carro__info">
+                  <strong>{{ c.marca }} {{ c.modelo }}</strong>
+                  <span>{{ c.versao ?? c.anoModelo }}</span>
+                  @if (c.modificacao) {
+                    <span class="carro__motivo">Tem: {{ c.modificacao }}</span>
+                  }
+                  <span class="carro__dono">de &#64;{{ c.dono.username }}</span>
+                </div>
+              </a>
+            }
+          </div>
+        </section>
+      }
+    }
+  }
+</main>

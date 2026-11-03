@@ -1,0 +1,49 @@
+<gh-auth-layout>
+  @if (concluido()) {
+    <div>
+      <h1>Senha alterada</h1>
+      <p class="sub">Pronto! Por segurança, saímos da sua conta em todos os aparelhos. Entre de novo com a senha nova.</p>
+    </div>
+    <a routerLink="/entrar" class="gh-btn gh-btn--primary gh-btn--block">Entrar</a>
+  } @else if (!tokenValido()) {
+    <div>
+      <h1>Link inválido</h1>
+      <p class="sub">Esse link de redefinição está incompleto ou foi copiado errado. Peça um novo.</p>
+    </div>
+    <a routerLink="/esqueci-senha" class="gh-btn gh-btn--primary gh-btn--block">Pedir novo link</a>
+  } @else {
+    <div>
+      <h1>Crie uma senha nova</h1>
+      <p class="sub">Use pelo menos 8 caracteres.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      @if (erro(); as mensagem) {
+        <p class="erro-geral" role="alert">
+          {{ mensagem }}
+          <a routerLink="/esqueci-senha" class="link">Pedir novo link</a>
+        </p>
+      }
+
+      <label class="gh-field">
+        Senha nova
+        <input type="password" formControlName="senha" placeholder="Pelo menos 8 caracteres" autocomplete="new-password" [attr.aria-invalid]="invalido('senha')" />
+        @if (invalido('senha')) {
+          <span class="gh-field__error">A senha precisa ter de 8 a 72 caracteres.</span>
+        }
+      </label>
+
+      <label class="gh-field">
+        Repita a senha
+        <input type="password" formControlName="confirmacao" autocomplete="new-password" [attr.aria-invalid]="invalido('confirmacao')" />
+        @if (invalido('confirmacao')) {
+          <span class="gh-field__error">As senhas não são iguais.</span>
+        }
+      </label>
+
+      <button type="submit" class="gh-btn gh-btn--primary gh-btn--block" [disabled]="enviando()">
+        {{ enviando() ? 'Salvando…' : 'Salvar senha nova' }}
+      </button>
+    </form>
+  }
+</gh-auth-layout>

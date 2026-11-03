@@ -1,0 +1,93 @@
+<gh-site-header />
+
+@if (capa(); as foto) {
+  <div class="capa" [style.background-image]="'url(' + foto + ')'"></div>
+}
+
+<main [class.com-capa]="capa()">
+  @if (perfil.isLoading()) {
+    <p class="estado">Carregando garagem…</p>
+  } @else if (perfil.error()) {
+    <div class="estado">
+      <p>Não foi possível carregar essa garagem agora.</p>
+      <button type="button" class="gh-btn" (click)="perfil.reload()">Tentar de novo</button>
+    </div>
+  } @else if (perfil.hasValue() && perfil.value(); as p) {
+    <section class="cabecalho gh-vidro">
+      <div class="avatar" aria-hidden="true">
+        @if (p.avatarUrl; as url) {
+          <img class="gh-avatar-foto" [src]="url" alt="" />
+        } @else {
+          <span>{{ p.iniciais }}</span>
+        }
+      </div>
+      <div class="identidade">
+        <h1>{{ p.nome }}</h1>
+        <p class="usuario gh-mono">
+          &#64;{{ p.username }}
+          @if (p.cidade) { · {{ p.cidade }} }
+        </p>
+        @if (p.bio) {
+          <p class="bio">{{ p.bio }}</p>
+        }
+      </div>
+      <dl class="numeros">
+        <div class="gh-carbono"><dt class="gh-rotulo">Carros</dt><dd>{{ veiculos().length }}</dd></div>
+        <div class="gh-carbono"><dt class="gh-rotulo">Seguidores</dt><dd>{{ social()?.seguidores ?? p.seguidores }}</dd></div>
+        <div class="gh-carbono"><dt class="gh-rotulo">Mods</dt><dd>{{ totalModificacoes() }}</dd></div>
+      </dl>
+      <div class="acoes">
+      @if (ehDono()) {
+        <a routerLink="/conta/perfil" class="gh-btn">Editar perfil</a>
+      } @else {
+        <gh-botao-seguir
+          [username]="p.username"
+          [euSigo]="social()?.euSigo ?? p.euSigo"
+          (mudou)="social.set($event)"
+        />
+      }
+      <button type="button" class="gh-btn" (click)="compartilhar()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1" />
+          <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" />
+        </svg>
+        {{ linkCopiado() ? 'Link copiado' : 'Compartilhar garagem' }}
+      </button>
+      <p class="link-bio gh-mono">{{ dominio }}/<span>{{ p.username }}</span></p>
+      </div>
+    </section>
+
+    <div class="abas" role="tablist" aria-label="Filtrar carros">
+      @for (aba of abas(); track aba.id) {
+        <button
+          type="button"
+          role="tab"
+          [class.ativa]="filtro() === aba.id"
+          [attr.aria-selected]="filtro() === aba.id"
+          (click)="filtro.set(aba.id)"
+        >
+          {{ aba.label }} <span class="gh-mono">{{ aba.total }}</span>
+        </button>
+      }
+    </div>
+
+    @if (veiculosFiltrados().length) {
+      <div class="grade">
+        @for (v of veiculosFiltrados(); track v.id) {
+          <gh-card-veiculo [veiculo]="v" [username]="p.username" />
+        }
+      </div>
+    } @else if (!veiculos().length && ehDono()) {
+      <div class="estado">
+        <p>Sua garagem ainda está vazia.</p>
+        <a routerLink="/garagem/novo" class="gh-btn gh-btn--primary">Adicionar meu primeiro carro</a>
+      </div>
+    } @else if (!veiculos().length) {
+      <p class="estado">Nenhum carro na garagem ainda.</p>
+    } @else {
+      <p class="estado">Nenhum carro nesta categoria.</p>
+    }
+  } @else {
+    <p class="estado">Essa garagem não existe ou é privada.</p>
+  }
+</main>

@@ -1,0 +1,6 @@
+<router-outlet />
+
+<!-- Só durante o beta -->
+@if (auth.logado()) {
+  <gh-reportar-problema />
+}

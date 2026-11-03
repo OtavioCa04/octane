@@ -1,0 +1,23 @@
+# Octane: API (garagehub-api) e site (garagehub-web) no mesmo repositório.
+# Cada pasta tem o próprio .gitignore; aqui fica o que vale para o projeto todo.
+
+# Segredos e dados locais da API
+garagehub-api/.env
+garagehub-api/*.sqlite
+garagehub-api/storage/
+garagehub-api/public/uploads/
+
+# Pacote de deploy gerado por deploy/empacotar.mjs
+deploy/saida/
+deploy/*.zip
+
+# Sobras de testes antigos (tentativa com Laravel, que não foi usada)
+garagehub-api-novo/
+php-dev/
+
+# Configuração local do Claude Code
+.claude/
+
+# Sistema
+.DS_Store
+Thumbs.db

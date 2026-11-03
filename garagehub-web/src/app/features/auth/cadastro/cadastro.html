@@ -1,0 +1,82 @@
+<gh-auth-layout>
+  <div>
+    <h1>Criar minha garagem</h1>
+    <p class="sub">Leva menos de um minuto.</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="cadastrar()" novalidate>
+    @if (erro(); as mensagem) {
+      <p class="erro-geral" role="alert">{{ mensagem }}</p>
+    }
+
+    <label class="gh-field">
+      Nome
+      <input
+        type="text"
+        formControlName="nome"
+        placeholder="Seu nome"
+        autocomplete="name"
+        [attr.aria-invalid]="!!erroDo('nome')"
+        (input)="limparErroApi('nome')"
+      />
+      @if (erroDo('nome'); as msg) {
+        <span class="gh-field__error">{{ msg }}</span>
+      }
+    </label>
+
+    <label class="gh-field">
+      Nome de usuário
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="seunome"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+        [attr.aria-invalid]="!!erroDo('username')"
+        (input)="limparErroApi('username')"
+      />
+      @if (erroDo('username'); as msg) {
+        <span class="gh-field__error">{{ msg }}</span>
+      } @else {
+        <span class="dica">Sua garagem fica em garagehub.com/{{ form.controls.username.value || 'seunome' }}</span>
+      }
+    </label>
+
+    <label class="gh-field">
+      E-mail
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="voce@email.com"
+        autocomplete="email"
+        [attr.aria-invalid]="!!erroDo('email')"
+        (input)="limparErroApi('email')"
+      />
+      @if (erroDo('email'); as msg) {
+        <span class="gh-field__error">{{ msg }}</span>
+      }
+    </label>
+
+    <label class="gh-field">
+      Senha
+      <input
+        type="password"
+        formControlName="senha"
+        placeholder="Pelo menos 8 caracteres"
+        autocomplete="new-password"
+        [attr.aria-invalid]="!!erroDo('senha')"
+        (input)="limparErroApi('senha')"
+      />
+      @if (erroDo('senha'); as msg) {
+        <span class="gh-field__error">{{ msg }}</span>
+      }
+    </label>
+
+    <button type="submit" class="gh-btn gh-btn--primary gh-btn--block" [disabled]="enviando()">
+      {{ enviando() ? 'Criando…' : 'Criar garagem' }}
+    </button>
+  </form>
+
+  <p class="sub">Já tem conta? <a routerLink="/entrar" class="link">Entrar</a></p>
+</gh-auth-layout>

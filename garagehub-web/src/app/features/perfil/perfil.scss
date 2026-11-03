@@ -1,0 +1,220 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+main {
+  max-width: var(--gh-max-width);
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+}
+
+.estado {
+  padding: 64px 0;
+  text-align: center;
+  color: var(--gh-text-muted);
+}
+
+.capa {
+  height: 340px;
+  background: center 60% / cover no-repeat;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 13, 17, 0.25) 0%, rgba(11, 13, 17, 0.55) 55%, var(--gh-bg) 100%);
+  }
+}
+
+main.com-capa {
+  margin-top: -150px;
+  position: relative;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 28px;
+  border-radius: 20px;
+}
+
+// Anel em degradê cobre → titânio
+.avatar {
+  width: 116px;
+  height: 116px;
+  flex: none;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(var(--gh-accent), var(--gh-accent-text), var(--gh-titanium), var(--gh-accent));
+
+  span {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--gh-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 38px var(--gh-font-display);
+  }
+}
+
+.identidade {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h1 {
+    font-size: 40px;
+    line-height: 1.05;
+  }
+}
+
+.usuario,
+.bio {
+  margin: 0;
+}
+
+.usuario {
+  font-size: 13px;
+  color: var(--gh-text-muted);
+}
+
+.bio {
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gh-text-2);
+  max-width: 520px;
+}
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  flex: 0 1 380px;
+  margin: 0;
+
+  div {
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  dd {
+    margin: 4px 0 0;
+    font: 600 26px/1 var(--gh-font-mono);
+  }
+}
+
+.acoes {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--gh-border);
+}
+
+.link-bio {
+  margin: 0 0 0 auto;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: var(--gh-radius);
+  border: 1px dashed var(--gh-accent-line);
+  font-size: 13px;
+  color: var(--gh-text-2);
+
+  span {
+    color: var(--gh-accent-text);
+  }
+}
+
+.abas {
+  display: flex;
+  gap: 24px;
+  margin: 36px 0 22px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--gh-border);
+
+  button {
+    padding: 12px 2px;
+    margin-bottom: -1px;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    font: 600 14px var(--gh-font-body);
+    color: var(--gh-text-muted);
+    cursor: pointer;
+
+    span {
+      color: var(--gh-text-faint);
+    }
+
+    &:hover,
+    &.ativa {
+      color: var(--gh-text);
+    }
+
+    &.ativa {
+      border-bottom-color: var(--gh-accent);
+    }
+  }
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 24px 16px 48px;
+  }
+
+  .capa {
+    height: 200px;
+  }
+
+  main.com-capa {
+    margin-top: -80px;
+  }
+
+  .cabecalho {
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .avatar {
+    width: 76px;
+    height: 76px;
+
+    span {
+      font-size: 26px;
+    }
+  }
+
+  .numeros {
+    flex-basis: 100%;
+  }
+
+  .link-bio {
+    margin-left: 0;
+  }
+
+  .identidade h1 {
+    font-size: 32px;
+  }
+
+  .abas {
+    gap: 16px;
+  }
+}

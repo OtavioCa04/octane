@@ -1,0 +1,166 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+main {
+  max-width: var(--gh-max-width);
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 40px;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.estado {
+  color: var(--gh-text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.dica {
+  font-size: 13px;
+  color: var(--gh-text-faint);
+}
+
+.pessoas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--gh-surface);
+    border: 1px solid var(--gh-border);
+    border-radius: 12px;
+  }
+}
+
+.pessoa {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &__info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: var(--gh-text-muted);
+
+    strong {
+      font-size: 15px;
+      color: var(--gh-text);
+    }
+  }
+
+  &:hover strong {
+    color: var(--gh-accent-text);
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gh-accent);
+  background: var(--gh-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 17px var(--gh-font-display);
+}
+
+.carros {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.carro {
+  display: flex;
+  flex-direction: column;
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--gh-border-strong);
+  }
+
+  &__foto {
+    position: relative;
+    aspect-ratio: 16 / 10;
+
+    gh-foto-veiculo {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  &__info {
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--gh-text-muted);
+
+    strong {
+      font: 800 21px/1.1 var(--gh-font-display);
+      color: var(--gh-text);
+    }
+  }
+
+  &__motivo {
+    color: var(--gh-accent-text);
+  }
+
+  &__dono {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--gh-text-faint);
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 20px 16px 48px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+}
